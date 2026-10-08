@@ -59,8 +59,8 @@ uv run --no-project --offline --no-python-downloads --no-cache --python 3.11 pyt
 
 The suite uses only the standard library. It creates and removes its own temporary
 fixtures under the bundle's `tests/` directory; the host must permit that test
-effect. The flags bypass the legacy project and prevent dependency/runtime
-downloads. Do not use `uv sync` to consume this Skill.
+effect. The flags run without project dependency resolution and prevent downloads.
+No project synchronization is needed to consume this Skill.
 
 Offline calculation, CLI, and detached-bundle checks have passed on Python 3.11
 and 3.14. Instruction boundaries and the reasoning loop have been reviewed
@@ -69,18 +69,18 @@ live-market suitability, or profitability. This is an exploratory decision aid,
 not a production-validated trading system. It never places orders; trading
 decisions remain with the user.
 
-## Legacy application
+## Repository scope and source history
 
-The inherited `pa_agent/`, root `tests/`, `prompt_engineering/`, configuration,
-`pyproject.toml`, lockfiles, and desktop tooling remain in the repository.
-They are **not dependencies of the extracted Skill**. The root Python package
-manifest still describes the legacy desktop application, not a Skill installer.
+The current tree contains the standalone Skill and its repository documentation,
+licenses, and development settings. The legacy desktop application, data adapters,
+model connectors, prompts, application tests, dependency manifest/lockfile,
+launchers, deployment guides, feedback screenshots, and sponsorship assets have
+been removed. There is no desktop application or Python package to install here.
 
-The [legacy application guide](PA_Agent使用文档.md) and
-[legacy configuration reference](config/README.md) describe that older system,
-not the standalone bundle. The original README is available in
-[the extraction source revision](https://github.com/nostalume/Technical-Trading-Skill/blob/cd0aca2da684fb342bc25f6e14bc980dc8480dab/README.md).
-No legacy runtime behavior is changed by this extraction.
+Historical source paths in the bundle's provenance notes refer to PA_Agent revision
+`cd0aca2da684fb342bc25f6e14bc980dc8480dab`, not current runtime dependencies.
+The original code and documentation remain available in Git history; see
+[the extraction source revision](https://github.com/nostalume/Technical-Trading-Skill/tree/cd0aca2da684fb342bc25f6e14bc980dc8480dab).
 
 ## Contributing and license
 

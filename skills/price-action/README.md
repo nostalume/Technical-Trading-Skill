@@ -20,10 +20,10 @@ or automatic order execution is included.
 
 The handoff unit is the complete `skills/price-action/` directory. Keep its
 `SKILL.md`, `references/`, `scripts/`, `tests/`, `README.md`, and `LICENSE`
-together so relative links and verification resources remain valid. The old
-application, dependency manifest/lockfile, prompts, configuration, records, and
-local extraction plan are not needed. This handoff does not install or register
-the Skill with a host; discovery configuration remains the host's responsibility.
+together so relative links and verification resources remain valid. Repository
+development settings and local authoring plans are not needed. This handoff does
+not install or register the Skill with a host; discovery configuration remains
+the host's responsibility.
 
 Supply evidence from your existing data project; no old data-layer interface or
 new acquisition service is required. The caller owns source integrity, product/
@@ -63,10 +63,10 @@ Model adherence to this request has not been tested here.
 ## Run one measurement
 
 For this example, use an existing `uv` executable and Python >=3.11. The portable
-script itself requires Python only. No old application dependencies, configuration,
+script itself requires Python only. No application dependencies, configuration,
 credentials, or market connection are required. From the repository root, using
 PowerShell 7 (after moving the bundle, resolve the script/test paths from its new
-root rather than using the old repository path):
+root rather than using the repository path):
 
 ```powershell
 $payload = @'
@@ -81,7 +81,7 @@ measurements are available, **not** that a trade is authorized or profitable.
 
 The calculation reads stdin and writes JSON to stdout; it does not fetch data or
 save analysis. Budgets are explicit UTF-8 byte limits, including the response's
-final newline, not minimum bar counts. `--no-project` bypasses the old project;
+final newline, not minimum bar counts. `--no-project` skips project discovery;
 `--offline --no-python-downloads` prevent downloads. Do not run `uv sync`.
 If PATH selects a broken tool-manager proxy, invoke your existing `uv.exe` by
 absolute path instead of modifying global settings.
@@ -120,13 +120,15 @@ uv run --no-project --offline --no-python-downloads --no-cache --python 3.11 pyt
 Tests use only the standard library. Isolation tests create and clean up their own
 temporary directories under `tests/`. A host sandbox denying access to newly
 created private directories must explicitly permit this controlled test effect;
-do not report a blocked test as passing. These tests do not validate the entire
-old application, live markets, model behavior, or profitability.
+do not report a blocked test as passing. These tests do not validate live markets,
+model behavior, or profitability.
 
 ## Provenance and license
 
 Source material comes from PA_Agent revision
-`cd0aca2da684fb342bc25f6e14bc980dc8480dab`:
+`cd0aca2da684fb342bc25f6e14bc980dc8480dab`. The paths below identify historical
+sources in Git history, not files required in the current tree. The legacy
+application and its supporting material have been removed from this tree:
 
 - `pa_agent/ai/kline_features.py`: candle, inside/outside, overlap, and EMA
   relationships; admission, missingness, timing, and independent inputs rewritten.

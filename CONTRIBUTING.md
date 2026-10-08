@@ -19,10 +19,11 @@ state, orders, fixed trading gates, or hidden repricing into the bundle.
 Changes to trading definitions or empirical claims need their own research
 evidence; passing software tests does not establish their market value.
 
-The legacy application and root dependency manifest remain separate. A Skill
-change does not require MetaTrader 5, API keys, a GUI, `pip install -e .`, or
-`uv sync`. If deliberately changing legacy code, identify that scope explicitly
-and use its relevant tests rather than claiming bundle checks cover it.
+This repository contains a Skill bundle, not a desktop application or an
+installable Python package. The measurement adapter needs Python's standard
+library only; no API keys, GUI, or project dependency synchronization are required.
+Legacy code is available in Git history, not a second development target in the
+current tree.
 
 ## Offline checks
 
@@ -39,7 +40,8 @@ do not label it a pass. Repeat on another supported Python version when changing
 runtime-sensitive behavior.
 
 With an existing Ruff executable, check the bundle's Python files without
-creating a cache:
+creating a cache. The root `ruff.toml` preserves the bundle's Python 3.11 target,
+100-column formatting, and selected lint rules:
 
 ```powershell
 ruff check --no-cache skills/price-action/scripts skills/price-action/tests
