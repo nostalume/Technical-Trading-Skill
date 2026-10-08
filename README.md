@@ -1,156 +1,90 @@
-# PA Agent — AI K线分析辅助工具（桌面端）
+# Technical Trading Skill
 
-**交流 QQ 群：1063897401**
+A portable, English price-action Skill for interpreting supplied market evidence,
+developing conditional opening ideas for **human confirmation**, and reviewing
+explicitly supplied plans. This fork extracts selected knowledge and independent
+measurements from PA_Agent; it is not a new data service or an automated trader.
 
----
+## Start here
 
-面向主观交易者的 **价格行为（Price Action）** AI 辅助决策工具。从 **MT5 / TradingView / yfinance / AkShare** 读取 K 线，将结构化 K 线数据与预计算特征送入大模型做**两阶段分析**（市场诊断 → 交易决策），**不是**截图识图，**不连接券商、不执行下单**。
+Clone this fork using Git (network access required):
 
----
-
-## 主要功能
-
-- 📈 **多数据源**：MT5（Windows）、TradingView（全平台）、yfinance（期货/加密货币）、AkShare（A 股）
-- 🧠 **两阶段 AI 分析**：市场诊断 → 策略路由 → 交易决策（限价/突破/市价或不下单）
-- 🔄 **增量分析与持续跟踪**：新增 K 线时复用上次结论；开启 `keep_analysis` 后新 K 线收盘自动触发新一轮分析
-- 🌳 **决策树可视化**：赛博科幻风格可交互流程图，自动播放闸门→策略路径动画
-- 🔮 **未来走势预期**：AI 预测下一根 K 线方向和下一个市场周期位置
-- 💬 **分析后自由追问**：完整对话会话管理器，实时推理流 + Token 进度条，对话历史持久化
-- 📚 **经验库**：按周期位置检索历史案例供分析参考
-- 📝 **完整落盘**：Prompt、原始响应、诊断/决策 JSON、Token 用量、追问记录
-- 🛡️ **可配置校验体系**：JSON 校验、一致性检查、语义校验、截断修复、失败自动重试
-- 🔒 **API Key** 本地加密存储
-
----
-
-## 环境要求
-
-| 项目     | 要求                                                                    |
-| -------- | ----------------------------------------------------------------------- |
-| 操作系统 | Windows 10 / 11（主支持）、macOS 12+（TradingView 数据源）              |
-| Python   | 3.11+                                                                    |
-| 数据源   | MT5 / TradingView / yfinance / AkShare **至少配置一种**                  |
-| 网络     | 可访问所配置的 AI API（如 DeepSeek、PackyAPI 等）                        |
-
----
-
-## 快速开始
-
-直接在系统中安装（推荐部署在本机）：
-
-```cmd
-pip install -e .
-python -m pa_agent.main
+```powershell
+git clone https://github.com/nostalume/Technical-Trading-Skill.git
+cd Technical-Trading-Skill
 ```
 
-首次启动后在**设置**中填写 **Base URL**、**模型名** 与 **API Key**。
+Read the [bundle guide](skills/price-action/README.md) for usage, a runnable
+measurement example, verification commands, and provenance. The
+[Skill entry](skills/price-action/SKILL.md) is the instruction entry point;
+the [measurement contract](skills/price-action/references/measurements.md)
+defines the optional calculation interface.
 
-> 如需隔离环境也可创建虚拟环境：`python -m venv .venv` 后激活再 `pip install -e .`。
+The handoff unit is the complete `skills/price-action/` directory. Keep its
+instructions, references, script, tests, guide, and license together. Copying it
+does not install or register it with an agent host; use your host's own discovery
+configuration. No old application dependencies or API credentials are needed for
+the bundled measurements.
 
-**安装内容**：PyQt6（GUI 框架）+ pyqtgraph（K 线图表绘图）+ numpy/pandas（数据处理）+ openai（AI API 客户端）+ json 校验、模型定义等全套依赖。
+## What it provides
 
-> 若需运行测试（pytest）或代码格式化（ruff/black），额外安装：`pip install -e ".[dev]"`。
+- Candle geometry, repeated tests, trend/range context, breakout/retest sequences,
+  and conditional reversal-structure interpretations.
+- Source-bound candidate plans: premises, triggers, entry/invalidation/stop/target
+  rationale, competing scenarios, and waiting conditions.
+- A bounded reasoning loop that revises affected claims from supplied evidence,
+  rather than polling markets or maintaining account/position state.
+- Eight standalone calculations: `geometry`, `ema`, `atr`, `window`, `compare`,
+  `pivots`, `projection`, and `risk_reward`.
 
+Supply evidence from your own data project. Crypto and A-share short-term analysis
+are intended use cases, not verified product integrations. The caller supplies
+product/venue, timeframe, observation cutoff, permitted direction, and holding
+horizon when they matter; the Skill does not impose a universal trading schedule.
+Acquisition, product-specific rules, risk policy, and execution remain outside
+the bundle.
 
-```cmd
-# 1. 安装 uv（仅需一次）
-pip install uv
-# 或官方脚本：curl -LsSf https://astral.sh/uv/install.sh | sh
+The extraction does not retain the old application's fixed trade-permission
+thresholds, guessed ticks, hidden stop widening, or automatic price changes to
+satisfy a reward/risk gate. Measurements do not automatically classify complex
+patterns or authorize trades.
 
-# 2. 首次运行或依赖变更时，make 自动创建 .venv 并同步依赖
-make uv-run
+## Verification and limits
 
-# 3. 之后每次启动
-make uv-run
-# 或手动：uv run python -m pa_agent.main
+With an existing `uv` executable and Python 3.11+, run from the repository root:
+
+```powershell
+uv run --no-project --offline --no-python-downloads --no-cache --python 3.11 python -B -m unittest discover -s skills/price-action/tests -p 'test_*.py'
 ```
 
-> 运行测试：`make uv-test`，代码检查：`make uv-lint`。
+The suite uses only the standard library. It creates and removes its own temporary
+fixtures under the bundle's `tests/` directory; the host must permit that test
+effect. The flags bypass the legacy project and prevent dependency/runtime
+downloads. Do not use `uv sync` to consume this Skill.
 
----
+Offline calculation, CLI, and detached-bundle checks have passed on Python 3.11
+and 3.14. Instruction boundaries and the reasoning loop have been reviewed
+statically. These checks do **not** establish model behavior, host discovery,
+live-market suitability, or profitability. This is an exploratory decision aid,
+not a production-validated trading system. It never places orders; trading
+decisions remain with the user.
 
-## 详细说明
+## Legacy application
 
-完整操作界面说明见 [`PA_Agent使用文档.md`](PA_Agent使用文档.md)，配置字段说明见 [`config/README.md`](config/README.md)。
+The inherited `pa_agent/`, root `tests/`, `prompt_engineering/`, configuration,
+`pyproject.toml`, lockfiles, and desktop tooling remain in the repository.
+They are **not dependencies of the extracted Skill**. The root Python package
+manifest still describes the legacy desktop application, not a Skill installer.
 
----
+The [legacy application guide](PA_Agent使用文档.md) and
+[legacy configuration reference](config/README.md) describe that older system,
+not the standalone bundle. The original README is available in
+[the extraction source revision](https://github.com/nostalume/Technical-Trading-Skill/blob/cd0aca2da684fb342bc25f6e14bc980dc8480dab/README.md).
+No legacy runtime behavior is changed by this extraction.
 
-**免责声明**：本工具仅供学习与研究，不构成投资建议。交易有风险，决策后果自负。
+## Contributing and license
 
-本项目采用 [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE) 发布。
-
----
-
-## 群友反馈榜单
-
-感谢群友的使用反馈与鼓励，以下为群友评价截图（按时间从早到晚排列）：
-
-<p align="center">
-  <img src="qunyou/BD58CB2D6E4F45CC17CF832C506A982C.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/653EC872A0D6883A34B7B37B692C8B1D.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/QQ20260619-205140.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/QQ20260619-235505.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/QQ20260620-150714.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/QQ20260620-150833.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/QQ20260620-220824.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/QQ20260623-125929.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/91003065F07407E92B50964AE7F8A944.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/QQ20260624-191001.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/QQ20260628-014043.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/QQ20260628-213700.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/QQ20260629-163821.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/QQ20260701-212522.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/BB4AE8110A7011426BD29D5CE8B5F73B.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/F383D366F2254692418DB18AAA617ACE.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/AD48DF6289CB6A9D51FE0B8EE2EC38C2.jpg" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/F61C8DCDB67924B64B33403D20047E0B.png" alt="群友反馈" width="480" />
-</p>
-<p align="center">
-  <img src="qunyou/QQ_1783089951396.png" alt="群友反馈" width="480" />
-</p>
-
----
-
-## 打赏与支持
-
-如果你觉得这个程序对你有帮助的话，可以打赏激励作者继续优化程序，感谢你的支持和鼓励！
-
-（作者会优先解决打赏人的问题，因为人太多了！回复不过来！）
-
-<p align="center">
-  <img src="赞助码.jpeg" alt="打赏二维码" width="420" />
-</p>
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the Skill development scope and checks.
+The bundle guide records source provenance and deliberately excluded behavior.
+The original **AGPL-3.0-or-later** declaration is retained; see [LICENSE](LICENSE)
+and the [bundle license](skills/price-action/LICENSE).

@@ -1,52 +1,68 @@
-# 参与贡献
+# Contributing to Technical Trading Skill
 
-感谢你对 PA Agent 的关注。本项目欢迎 Issue 与 Pull Request。
+This fork focuses on the portable [price-action bundle](skills/price-action/README.md).
+Issues and pull requests should describe the intended result, affected contract,
+and evidence supporting the change.
 
-## 开发环境
+## Scope and ownership
 
-1. Windows 10/11，Python 3.11+
-2. 安装 MetaTrader 5 并登录（用于真实 K 线联调）
-3. 克隆仓库后：
+- `skills/price-action/SKILL.md` owns capability scope and reasoning behavior.
+- `references/` inside the bundle owns focused interpretation guidance and the
+  measurement contract; avoid duplicating these rules in the entry or root docs.
+- `scripts/measure.py` owns stateless, standard-library arithmetic on explicit
+  inputs. Preserve input admission, cutoff/closure semantics, missingness,
+  provenance, output budgets, and unchanged caller-supplied prices.
+- Bundle `tests/` owns offline calculation, CLI, and portability checks.
 
-   ```cmd
-   python -m venv .venv
-   .venv\Scripts\activate
-   pip install -e ".[dev]"
-   copy config\settings.example.json config\settings.json
-   ```
+Do not introduce old data-layer dependencies, credentials, acquisition, account
+state, orders, fixed trading gates, or hidden repricing into the bundle.
+Changes to trading definitions or empirical claims need their own research
+evidence; passing software tests does not establish their market value.
 
-4. 在 GUI **设置** 中配置 API Key，或仅跑不依赖网络的测试。
+The legacy application and root dependency manifest remain separate. A Skill
+change does not require MetaTrader 5, API keys, a GUI, `pip install -e .`, or
+`uv sync`. If deliberately changing legacy code, identify that scope explicitly
+and use its relevant tests rather than claiming bundle checks cover it.
 
-## 提交代码前
+## Offline checks
 
-```cmd
-pytest -m "not e2e"
-ruff check pa_agent tests
-```
-
-（若已安装 `black`，可按团队习惯格式化。）
-
-## 请勿提交
-
-- `config/settings.json`、`config/exception_state.json`
-- `logs/`、`records/pending/`、`experience/` 下的运行数据
-- 任何 API Key、`.env`、私钥文件
-
-启用本地 pre-commit 钩子：
+Use an existing Python >=3.11 and `uv`. From the repository root in PowerShell:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\setup_git_secrets.ps1
+uv run --no-project --offline --no-python-downloads --no-cache --python 3.11 python -B -m unittest discover -s skills/price-action/tests -p 'test_*.py'
 ```
 
-## Pull Request 建议
+The tests use only the standard library and create/clean their own temporary
+directories under the bundle's `tests/`. If a sandbox denies access to those
+fixtures, report the blocked check and obtain permission for that bounded effect;
+do not label it a pass. Repeat on another supported Python version when changing
+runtime-sensitive behavior.
 
-- 一个 PR 聚焦一类改动（功能 / 修复 / 文档）
-- 说明动机与测试方式
-- 若改 JSON schema、提示词或路由，请补充或更新 `tests/` 中相关用例
+With an existing Ruff executable, check the bundle's Python files without
+creating a cache:
 
-## 问题反馈
+```powershell
+ruff check --no-cache skills/price-action/scripts skills/price-action/tests
+ruff format --check --no-cache skills/price-action/scripts skills/price-action/tests
+```
 
-- Bug：附上日志片段（`logs/pa_agent.log`）、复现步骤、品种/周期
-- 功能建议：说明使用场景与期望行为
+For documentation changes, verify relative links and runnable examples. Keep all
+Skill-facing instructions and documentation in English. State whether evidence
+comes from arithmetic/CLI tests, static instruction review, observed model
+behavior, or market research; do not substitute one for another. Fresh-context
+model tests are not a required contribution gate.
 
-讨论与交流也可加入 README 中的 QQ 群。
+## Before committing
+
+- Keep a change focused and explain compatibility or observable behavior changes.
+- Preserve provenance and the original AGPL-3.0-or-later declaration.
+- Inspect the staged diff, not just the working directory. Stage intended paths
+  explicitly; local authoring plans under `.agents/plan/` are not public docs.
+- Do not publish API keys, `.env` files, private keys, local settings, logs,
+  analysis records, account data, or private market evidence.
+- Keep new regression fixtures synthetic or clearly authorized for publication.
+
+For bug reports, provide a minimal sanitized input, operation, Python version,
+expected result, actual output/status, and reproduction command. For instruction
+issues, include the relevant premise and boundary that failed without disclosing
+private trading records.
