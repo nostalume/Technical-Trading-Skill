@@ -1,12 +1,12 @@
 # Contributing to Technical Trading Skill
 
-This fork focuses on the portable [price-action bundle](.agents/skills/price-action/README.md).
+This fork focuses on the portable [price-action bundle](skills/price-action/README.md).
 Issues and pull requests should describe the intended result, affected contract,
 and evidence supporting the change.
 
 ## Scope and ownership
 
-- `.agents/skills/price-action/SKILL.md` owns capability scope and reasoning behavior.
+- `skills/price-action/SKILL.md` owns capability scope and reasoning behavior.
 - `references/` inside the bundle owns focused interpretation guidance and the
   measurement contract; avoid duplicating these rules in the entry or root docs.
 - `scripts/measure.py` owns stateless, standard-library arithmetic on explicit
@@ -30,7 +30,7 @@ current tree.
 Use an existing Python >=3.11 and `uv`. From the repository root in PowerShell:
 
 ```powershell
-uv run --no-project --offline --no-python-downloads --no-cache --python 3.11 python -B -m unittest discover -s .agents/skills/price-action/tests -p 'test_*.py'
+uv run --no-project --offline --no-python-downloads --no-cache --python 3.11 python -B -m unittest discover -s skills/price-action/tests -p 'test_*.py'
 ```
 
 The tests use only the standard library and create/clean their own temporary
@@ -44,8 +44,8 @@ creating a cache. The root `ruff.toml` preserves the bundle's Python 3.11 target
 100-column formatting, and selected lint rules:
 
 ```powershell
-ruff check --no-cache .agents/skills/price-action/scripts .agents/skills/price-action/tests
-ruff format --check --no-cache .agents/skills/price-action/scripts .agents/skills/price-action/tests
+ruff check --no-cache skills/price-action/scripts skills/price-action/tests
+ruff format --check --no-cache skills/price-action/scripts skills/price-action/tests
 ```
 
 For documentation changes, verify relative links and runnable examples. Keep all

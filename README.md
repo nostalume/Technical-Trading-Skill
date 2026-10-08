@@ -14,17 +14,23 @@ git clone https://github.com/nostalume/Technical-Trading-Skill.git
 cd Technical-Trading-Skill
 ```
 
-Read the [bundle guide](.agents/skills/price-action/README.md) for usage, a runnable
+Read the [bundle guide](skills/price-action/README.md) for usage, a runnable
 measurement example, verification commands, and provenance. The
-[Skill entry](.agents/skills/price-action/SKILL.md) is the instruction entry point;
-the [measurement contract](.agents/skills/price-action/references/measurements.md)
+[Skill entry](skills/price-action/SKILL.md) is the instruction entry point;
+the [measurement contract](skills/price-action/references/measurements.md)
 defines the optional calculation interface.
 
-The handoff unit is the complete `.agents/skills/price-action/` directory. Keep its
+The handoff unit is the complete `skills/price-action/` directory. Keep its
 instructions, references, script, tests, guide, and license together. Copying it
 does not install or register it with an agent host; use your host's own discovery
 configuration. No old application dependencies or API credentials are needed for
 the bundled measurements.
+
+For a user-level copy, copy the complete bundle to
+`$HOME/.agents/skills/price-action/` **without moving the repository source**.
+Do not overwrite an existing installed copy without reviewing its local changes.
+The bundle guide's commands run from the bundle directory, so they work for either
+copy. This repository does not need a second bundle under its own `.agents/`.
 
 ## What it provides
 
@@ -54,7 +60,7 @@ patterns or authorize trades.
 With an existing `uv` executable and Python 3.11+, run from the repository root:
 
 ```powershell
-uv run --no-project --offline --no-python-downloads --no-cache --python 3.11 python -B -m unittest discover -s .agents/skills/price-action/tests -p 'test_*.py'
+uv run --no-project --offline --no-python-downloads --no-cache --python 3.11 python -B -m unittest discover -s skills/price-action/tests -p 'test_*.py'
 ```
 
 The suite uses only the standard library. It creates and removes its own temporary
@@ -87,4 +93,4 @@ The original code and documentation remain available in Git history; see
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the Skill development scope and checks.
 The bundle guide records source provenance and deliberately excluded behavior.
 The original **AGPL-3.0-or-later** declaration is retained; see [LICENSE](LICENSE)
-and the [bundle license](.agents/skills/price-action/LICENSE).
+and the [bundle license](skills/price-action/LICENSE).
