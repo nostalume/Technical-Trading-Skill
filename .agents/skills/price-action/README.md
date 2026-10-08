@@ -18,7 +18,7 @@ or automatic order execution is included.
 
 ## Consume or move the bundle
 
-The handoff unit is the complete `skills/price-action/` directory. Keep its
+The handoff unit is the complete `.agents/skills/price-action/` directory. Keep its
 `SKILL.md`, `references/`, `scripts/`, `tests/`, `README.md`, and `LICENSE`
 together so relative links and verification resources remain valid. Repository
 development settings and local authoring plans are not needed. This handoff does
@@ -72,7 +72,7 @@ root rather than using the repository path):
 $payload = @'
 {"schema_version":1,"operation":"geometry","features":["candle"],"order":"oldest_first","as_of_ms":20,"bars":[{"id":"a","open":10,"high":14,"low":8,"close":12,"closed":true,"available_at_ms":20}]}
 '@
-$payload | uv run --no-project --offline --no-python-downloads --no-cache --python 3.11 python -B skills/price-action/scripts/measure.py --max-input-bytes 10000 --max-output-bytes 100000
+$payload | uv run --no-project --offline --no-python-downloads --no-cache --python 3.11 python -B .agents/skills/price-action/scripts/measure.py --max-input-bytes 10000 --max-output-bytes 100000
 ```
 
 Expect `status="complete"`, `data.rows[0].metrics.range.value=6`, and
@@ -114,7 +114,7 @@ order is currently executable.
 ## Offline verification
 
 ```powershell
-uv run --no-project --offline --no-python-downloads --no-cache --python 3.11 python -B -m unittest discover -s skills/price-action/tests -p 'test_*.py'
+uv run --no-project --offline --no-python-downloads --no-cache --python 3.11 python -B -m unittest discover -s .agents/skills/price-action/tests -p 'test_*.py'
 ```
 
 Tests use only the standard library. Isolation tests create and clean up their own
